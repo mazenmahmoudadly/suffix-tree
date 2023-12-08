@@ -5,13 +5,13 @@
 
 using namespace std;
 
-template <typename T>
+template <class T>
 class SLL{
     class Node{
     public:
-    T data;
-    Node*next;
-};
+        T data;
+        Node*next;
+    };
 public:
     Node*head,*tail;
     int size;
@@ -20,7 +20,6 @@ public:
         tail=NULL;
         size=0;
     }
-    template <typename T>
     void inserAtHead(T item){
         Node*newNode=new Node;
         newNode->data=item;
@@ -32,13 +31,12 @@ public:
         else{
             newNode->next=head;
             head=newNode;
-            
+
         }
         size++;
     }
-    template <typename T>
     void insertAtTail(T item){
-          Node*newNode=new Node;
+        Node*newNode=new Node;
         newNode->data=item;
         newNode->next=NULL;
         if(tail==NULL){
@@ -48,36 +46,35 @@ public:
         else{
             tail->next=newNode;
             tail=tail->next;
-            
-        }  
-        size++;    
+
+        }
+        size++;
     }
-    template <typename T>
     void insertAt(int pos,int item){
         if(pos<0 || pos>size){
             cout<<"invalid pos";
         }
         else{
-           
-         if(pos ==0){
-            inserAtHead(item);
-        }
-        else if(pos==size-1){
-            insertAtTail(item);
-        }
-        else{
-             Node*newnode=new Node;
-            newnode->data=item;
-            Node*curr=head;
-            for(int i=1;i<pos;i++){
-                
-                curr=curr->next;
+
+            if(pos ==0){
+                inserAtHead(item);
             }
-            newnode->next=curr->next;
-            curr->next=newnode;
-            size++;
+            else if(pos==size-1){
+                insertAtTail(item);
+            }
+            else{
+                Node*newnode=new Node;
+                newnode->data=item;
+                Node*curr=head;
+                for(int i=1;i<pos;i++){
+
+                    curr=curr->next;
+                }
+                newnode->next=curr->next;
+                curr->next=newnode;
+                size++;
+            }
         }
-    }
     }
     void swapNode(int firstItemIdx, int secondItemIdx) {
         if (firstItemIdx == secondItemIdx) {
@@ -120,129 +117,126 @@ public:
         currY->next = temp;
     }
     void removeAt(int pos){
-         if(pos<0 || pos>size){
+        if(pos<0 || pos>size){
             cout<<"invalid pos";
         }
         else{
-           
-         if(pos ==0){
-            removeAtHead();
-        }
-        else if(pos==size-1){
-            removeAtTail();
-        }
-        else{
-             
-            Node*curr=head->next;
-            Node*prev=head;
-            for(int i=1;i<pos;i++){
-                
-                prev=curr;
-                curr=curr->next;
+
+            if(pos ==0){
+                removeAtHead();
             }
-            prev->next=curr->next;
-            free(curr);
-            size--;
+            else if(pos==size-1){
+                removeAtTail();
+            }
+            else{
+
+                Node*curr=head->next;
+                Node*prev=head;
+                for(int i=1;i<pos;i++){
+
+                    prev=curr;
+                    curr=curr->next;
+                }
+                prev->next=curr->next;
+                free(curr);
+                size--;
+            }
         }
-    }   
     }
-    template <typename T>
     bool isItemAtEqual(T element,int pos){
-                    if(pos<0 || pos>size){
+        if(pos<0 || pos>size){
             cout<<"invalid pos";
             return 0;
         }
         else{
-        if(pos==0){
-            return element==head->data;
-        }
-        else if(pos==size-1){
-            return element==tail->data;
-        }
-            else{
-            Node*curr=head->next;
-            Node*prev=head;
-            for(int i=1;i<pos;i++){
-                
-                prev=curr;
-                curr=curr->next;
+            if(pos==0){
+                return element==head->data;
             }
-            
-        return element==curr->data;
-    } 
-     }  
+            else if(pos==size-1){
+                return element==tail->data;
+            }
+            else{
+                Node*curr=head->next;
+                Node*prev=head;
+                for(int i=1;i<pos;i++){
+
+                    prev=curr;
+                    curr=curr->next;
+                }
+
+                return element==curr->data;
+            }
+        }
     }
     int retrieveAt(int pos){
-    
-             if(pos<0 || pos>size){
+
+        if(pos<0 || pos>size){
             cout<<"invalid pos";
             return 0;
         }
         else{
-        if(pos==0){
-            return head->data;
-        }
-        else if(pos==size-1){
-            return tail->data;
-        }
-            else{
-            Node*curr=head->next;
-            Node*prev=head;
-            for(int i=1;i<pos;i++){
-                
-                prev=curr;
-                curr=curr->next;
+            if(pos==0){
+                return head->data;
             }
-            
-        return curr->data;
-    } 
-     }  
+            else if(pos==size-1){
+                return tail->data;
+            }
+            else{
+                Node*curr=head->next;
+                Node*prev=head;
+                for(int i=1;i<pos;i++){
+
+                    prev=curr;
+                    curr=curr->next;
+                }
+
+                return curr->data;
+            }
+        }
     }
     void removeAtTail(){
-                  Node*curr=head->next;
-                  Node*prev=head;
+        Node*curr=head->next;
+        Node*prev=head;
         while(curr!=tail){
             prev=curr;
             curr=curr->next;
         }
-       free(curr);
-       prev->next=NULL;
-       tail=prev;
-            
-        size--;  
+        free(curr);
+        prev->next=NULL;
+        tail=prev;
+
+        size--;
     }
-    template <typename T>
     void replaceAt(T element,int pos){
-             if(pos<0 || pos>size){
+        if(pos<0 || pos>size){
             cout<<"invalid pos";
-            
+
         }
         else{
-        if(pos==0){
-            head->data=element;
-        }
-        else if(pos==size-1){
-           tail->data=element;
-        }
-            else{
-            Node*curr=head->next;
-            Node*prev=head;
-            for(int i=1;i<pos;i++){
-                
-                prev=curr;
-                curr=curr->next;
+            if(pos==0){
+                head->data=element;
             }
-            
-       curr->data=element;
-    } 
-     }
-    }
-    template <typename T>
-    bool isExist(T element){
-                   if(head->data==element){
-            return true;}
+            else if(pos==size-1){
+                tail->data=element;
+            }
             else{
-                 Node*curr=head->next;
+                Node*curr=head->next;
+                Node*prev=head;
+                for(int i=1;i<pos;i++){
+
+                    prev=curr;
+                    curr=curr->next;
+                }
+
+                curr->data=element;
+            }
+        }
+    }
+    bool isExist(T element){
+        if(head->data==element){
+            return true;}
+        else{
+            Node*curr=head->next;
             Node*prev=head;
             int flag=0;
             for(int i=1;i<size-2;i++){
@@ -251,8 +245,8 @@ public:
                     break;
                 }
                 else{
-                prev=curr;
-                curr=curr->next;
+                    prev=curr;
+                    curr=curr->next;
 
                 }
             }
@@ -267,14 +261,14 @@ public:
                     return false;
                 }
             }
-            
-            }
-       
+
+        }
+
 
 
     }
     void removeAtHead(){
-            Node*curr=new Node;
+        Node*curr=new Node;
         if(curr==NULL){
             head=NULL;
             tail=NULL;
@@ -283,9 +277,9 @@ public:
             curr=head;
             head=head->next;
             free(curr);
-            
+
         }
-            
+
         size--;
     }
     void print(){
@@ -297,10 +291,10 @@ public:
         }
         cout<<endl;
     }
-     bool isEmpty(){
+    bool isEmpty(){
         return size==0;
-    } 
-     void clear(){
+    }
+    void clear(){
         size=0;
     }
     int listsize(){
@@ -314,12 +308,12 @@ public:
     SLL<TreeNode> list;
     int id;
     int st;
-TreeNode(SLL<TreeNode> list,int id,int st){
-this->list=list;
-this->id=id;
-this->st=st;
+    TreeNode(SLL<TreeNode> list,int id,int st){
+        this->list=list;
+        this->id=id;
+        this->st=st;
 
-}
+    }
 
 };
 #include <cstring>
@@ -329,10 +323,18 @@ class SuffixTree {
 public:
     SuffixTree(const char* str) {
         int length = strlen(str);
-
-        for (int i = 0; i < length; i++) {
-            int result = strncmp(str + i, str, 2);
-            cout<<result<<" ";
+        buildTree(str, length);
+    }
+    void buildTree(const char* str, int str_length) {
+        char currentChar;
+        const int CHAR_COUNT = 128;
+        int charFrequency[CHAR_COUNT] = {0};
+        for (int i = 0; i < str_length; i++) {
+            currentChar = str[i];
+            charFrequency[currentChar]++;
+            if(charFrequency[currentChar] > 1) {
+                cout << "Character '" << currentChar << "' appears " << charFrequency[currentChar]<<endl;
+            }
         }
     }
 };
