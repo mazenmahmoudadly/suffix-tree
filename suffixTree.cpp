@@ -2,346 +2,271 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
+template <typename T>
+class Node {
+public:
+    T data;
+    Node* next;
+
+    Node(const T& data) : data(data), next(nullptr) {}
+};
+
+template <typename T>
+class LinkedList {
+private:
+    Node<T>* head;
+    Node<T>* tail;
+   
+
+public:
+    LinkedList() : head(nullptr), tail(nullptr) {}
+
+    // Push back adds a new element to the end of the list
+    void push_back(const T& value) {
+        Node<T>* newNode = new Node<T>(value);
+        if (!head) {
+            head = tail = newNode;
+        } else {
+            tail->next = newNode;
+            tail = newNode;
+        }
+      
+    }
+
+    // Begin returns an iterator pointing to the first element
+    Node<T>* begin() const {
+        return head;
+    }
+
+    // End returns an iterator pointing to one past the last element
+    Node<T>* end() const {
+        return nullptr;
+    }
+   
+       void reverse() {
+        Node<T>* prev = nullptr;
+        Node<T>* current = head;
+        Node<T>* next = nullptr;
+
+        while (current) {
+            next = current->next;
+            current->next = prev;
+            prev = current;
+            current = next;
+        }
+
+        head = prev;
+    }
+
+    // Iterator for traversing the linked list
+    class iterator {
+    private:
+        Node<T>* current;
+
+    public:
+        iterator(Node<T>* start) : current(start) {}
+
+        T& operator*() {
+            return current->data;
+        }
+
+        iterator& operator++() {
+            if (current) {
+                current = current->next;
+            }
+            return *this;
+        }
+
+        bool operator!=(const iterator& other) const {
+            return current != other.current;
+        }
+        bool operator==(const iterator& other) const {
+            return current == other.current;
+        }
+    };
+
+    // Get an iterator pointing to the first element
+    iterator begin() {
+        return iterator(head);
+    }
+
+    // Get an iterator pointing to one past the last element
+    iterator end() {
+        return iterator(nullptr);
+    }
+};
+
 
 using namespace std;
 
-template <class T>
-class SLL{
-    class Node{
-    public:
-        T data;
-        Node*next;
-    };
-public:
-    Node*head,*tail;
-    int size;
-    SLL(){
-        head=NULL;
-        tail=NULL;
-        size=0;
-    }
-    void inserAtHead(T item){
-        Node*newNode=new Node;
-        newNode->data=item;
-        newNode->next=NULL;
-        if(head==NULL){
-            head=newNode;
-            tail=newNode;
-        }
-        else{
-            newNode->next=head;
-            head=newNode;
-
-        }
-        size++;
-    }
-    void insertAtTail(T item){
-        Node*newNode=new Node;
-        newNode->data=item;
-        newNode->next=NULL;
-        if(tail==NULL){
-            tail=newNode;
-            head=newNode;
-        }
-        else{
-            tail->next=newNode;
-            tail=tail->next;
-
-        }
-        size++;
-    }
-    void insertAt(int pos,int item){
-        if(pos<0 || pos>size){
-            cout<<"invalid pos";
-        }
-        else{
-
-            if(pos ==0){
-                inserAtHead(item);
-            }
-            else if(pos==size-1){
-                insertAtTail(item);
-            }
-            else{
-                Node*newnode=new Node;
-                newnode->data=item;
-                Node*curr=head;
-                for(int i=1;i<pos;i++){
-
-                    curr=curr->next;
-                }
-                newnode->next=curr->next;
-                curr->next=newnode;
-                size++;
-            }
-        }
-    }
-    void swapNode(int firstItemIdx, int secondItemIdx) {
-        if (firstItemIdx == secondItemIdx) {
-            return;
-        }
-        Node* prevX = nullptr;
-        Node* currX = head;
-        int i = 0;
-        while (currX != nullptr && i < firstItemIdx) {
-            prevX = currX;
-            currX = currX->next;
-            i++;
-        }
-        Node* prevY = nullptr;
-        Node* currY = head;
-        i = 0;
-        while (currY != nullptr && i < secondItemIdx) {
-            prevY = currY;
-            currY = currY->next;
-            i++;
-        }
-        if (currX == nullptr || currY == nullptr) {
-            cout << "Index out of range!" << endl;
-            return;
-        }
-        if (prevX != nullptr) {
-            prevX->next = currY;
-        }
-        else {
-            head = currY;
-        }
-        if (prevY != nullptr) {
-            prevY->next = currX;
-        }
-        else {
-            head = currX;
-        }
-        Node* temp = currX->next;
-        currX->next = currY->next;
-        currY->next = temp;
-    }
-    void removeAt(int pos){
-        if(pos<0 || pos>size){
-            cout<<"invalid pos";
-        }
-        else{
-
-            if(pos ==0){
-                removeAtHead();
-            }
-            else if(pos==size-1){
-                removeAtTail();
-            }
-            else{
-
-                Node*curr=head->next;
-                Node*prev=head;
-                for(int i=1;i<pos;i++){
-
-                    prev=curr;
-                    curr=curr->next;
-                }
-                prev->next=curr->next;
-                free(curr);
-                size--;
-            }
-        }
-    }
-    bool isItemAtEqual(T element,int pos){
-        if(pos<0 || pos>size){
-            cout<<"invalid pos";
-            return 0;
-        }
-        else{
-            if(pos==0){
-                return element==head->data;
-            }
-            else if(pos==size-1){
-                return element==tail->data;
-            }
-            else{
-                Node*curr=head->next;
-                Node*prev=head;
-                for(int i=1;i<pos;i++){
-
-                    prev=curr;
-                    curr=curr->next;
-                }
-
-                return element==curr->data;
-            }
-        }
-    }
-    int retrieveAt(int pos){
-
-        if(pos<0 || pos>size){
-            cout<<"invalid pos";
-            return 0;
-        }
-        else{
-            if(pos==0){
-                return head->data;
-            }
-            else if(pos==size-1){
-                return tail->data;
-            }
-            else{
-                Node*curr=head->next;
-                Node*prev=head;
-                for(int i=1;i<pos;i++){
-
-                    prev=curr;
-                    curr=curr->next;
-                }
-
-                return curr->data;
-            }
-        }
-    }
-    void removeAtTail(){
-        Node*curr=head->next;
-        Node*prev=head;
-        while(curr!=tail){
-            prev=curr;
-            curr=curr->next;
-        }
-        free(curr);
-        prev->next=NULL;
-        tail=prev;
-
-        size--;
-    }
-    void replaceAt(T element,int pos){
-        if(pos<0 || pos>size){
-            cout<<"invalid pos";
-
-        }
-        else{
-            if(pos==0){
-                head->data=element;
-            }
-            else if(pos==size-1){
-                tail->data=element;
-            }
-            else{
-                Node*curr=head->next;
-                Node*prev=head;
-                for(int i=1;i<pos;i++){
-
-                    prev=curr;
-                    curr=curr->next;
-                }
-
-                curr->data=element;
-            }
-        }
-    }
-    bool isExist(T element){
-        if(head->data==element){
-            return true;}
-        else{
-            Node*curr=head->next;
-            Node*prev=head;
-            int flag=0;
-            for(int i=1;i<size-2;i++){
-                if(curr->data==element){
-                    flag=1;
-                    break;
-                }
-                else{
-                    prev=curr;
-                    curr=curr->next;
-
-                }
-            }
-            if(flag==1){
-                return true;
-            }
-            else{
-                if(tail->data==element){
-                    return true;
-                }
-                else{
-                    return false;
-                }
-            }
-
-        }
-
-
-
-    }
-    void removeAtHead(){
-        Node*curr=new Node;
-        if(curr==NULL){
-            head=NULL;
-            tail=NULL;
-        }
-        else{
-            curr=head;
-            head=head->next;
-            free(curr);
-
-        }
-
-        size--;
-    }
-    void print(){
-        Node*curr=head;
-        while (curr!=NULL)
-        {
-            cout<<curr->data<<" ";
-            curr=curr->next;
-        }
-        cout<<endl;
-    }
-    bool isEmpty(){
-        return size==0;
-    }
-    void clear(){
-        size=0;
-    }
-    int listsize(){
-        return size;
-    }
-};
-
-
 class TreeNode {
 public:
-    SLL<TreeNode> list;
-    int id;
+    LinkedList<TreeNode*> children;
     int st;
-    TreeNode(SLL<TreeNode> list,int id,int st){
-        this->list=list;
-        this->id=id;
-        this->st=st;
+    int id;
 
-    }
-
+    TreeNode(int st, int id) : st(st), id(id) {}
 };
-#include <cstring>
 
 class SuffixTree {
-    TreeNode * root;
 public:
-    SuffixTree(const char* str) {
-        int length = strlen(str);
-        buildTree(str, length);
+    SuffixTree(const char* str) : str(str) {
+        root = new TreeNode(-1, -1);
+        int len = strlen(str);
+        for (int i = len - 1; i >= 0; --i) {
+            insertSuffix(root, i);
+        }
     }
-    void buildTree(const char* str, int str_length) {
-        char currentChar;
-        const int CHAR_COUNT = 128;
-        int charFrequency[CHAR_COUNT] = {0};
-        for (int i = 0; i < str_length; i++) {
-            currentChar = str[i];
-            charFrequency[currentChar]++;
-            if(charFrequency[currentChar] > 1) {
-                cout << "Character '" << currentChar << "' appears " << charFrequency[currentChar]<<endl;
+
+    void Search(const char* pattern) {
+        LinkedList<int> results = searchPattern(root, pattern);
+        results.reverse();
+        
+        if (results.begin() == results.end()) {
+        cout << "not found";
+    }
+        for (int result : results) {
+            cout << result << " ";
+        }
+        cout << endl;
+    }
+
+private:
+    TreeNode* root;
+    const char* str;
+
+    void insertSuffix(TreeNode* node, int index) {
+        TreeNode* current = node;
+         int len = strlen(str);
+        for (int i = index; i <len; ++i) {
+            char c = str[i];
+            auto it = findChild(current, c);
+
+            if (it == current->children.end()) {
+                TreeNode* newNode = new TreeNode(i, -1);
+                current->children.push_back(newNode);
+                current = newNode;
+            } else {
+                current = *it;
             }
         }
+
+        current->id = index;
+    }
+
+    LinkedList<int> searchPattern(TreeNode* node, const char* pattern) {
+        LinkedList<int> results;
+        
+        TreeNode* current = node;
+   
+        for (const char *ptr = pattern; *ptr != '\0'; ++ptr) {
+            char c = *ptr;
+        // Rest of your loop logic here
+            auto it = findChild(current, c);
+
+         if (it == current->children.end()) {
+        return results;
+                 }
+
+                current = *it;
+            }
+
+        traverseSubtree(current, results);
+
+        return results;
+    }
+
+    void traverseSubtree(TreeNode* node, LinkedList<int>& results) {
+        if (node->id != -1) {
+            results.push_back(node->id);
+        }
+
+        for (auto child : node->children) {
+            traverseSubtree(child, results);
+        }
+    }
+
+    LinkedList<TreeNode*>::iterator findChild(TreeNode* node, char c) {
+        for (auto it = node->children.begin(); it != node->children.end(); ++it) {
+            if (str[(*it)->st] == c) {
+                return it;
+            }
+        }
+
+        return node->children.end();
     }
 };
 
 int main() {
-    const char* exampleString = "banana$";
-    SuffixTree suffixTree(exampleString);
+       cout<<"Test 1 \n";
+//                 0123456789012
+    SuffixTree t1("bananabanaba$");
+    t1.Search("abann"); //not found
+    t1.Search("aba"); // Prints: 5 9
+    t1.Search("naba");// Prints: 4 8
 
-    return 0;
+    cout<<"\n\nTest 2: \n";
+//                 012345678
+    SuffixTree t2("dodohdoh$");
+    t2.Search("dodo");// 0
+    t2.Search("hdoh");// 4
+    t2.Search("oh");// 3 6
+
+    cout<<"\n\nTest 3: \n";
+//                 0123456789012
+    SuffixTree t3("havanabanana$");
+    t3.Search("naxm"); // not found;
+    t3.Search("ava");//1
+    t3.Search("$");//12
+
+    cout<<"\n\nTest 4: \n";
+//                 01234567
+    SuffixTree t4("aramarv$");
+    t4.Search("rv$");//5
+    t4.Search("ara$");//not found
+    t4.Search("ma");//3
+
+    cout<<"\n\nTest 5: \n";
+//                 0123456789
+    SuffixTree t5("cttattaac$");
+    t5.Search("tta"); // 1 4
+    t5.Search("tatt"); // 2
+    t5.Search("at");//3
+
+    cout<<"\n\nTest 6: \n";
+//                 01234567890
+    SuffixTree t6("abcdefghab$");
+    t6.Search("ab"); // 0 8
+    t6.Search("defghab$");//3
+    t6.Search("abc"); // 0
+
+    cout<<"\n\nTest 7: \n";
+//                 01234567890
+    SuffixTree t7("ttaagacatg$");
+    t7.Search("gac"); // 4
+    t7.Search("catg$");//6
+    t7.Search("catg&"); // not found
+
+    cout<<"\n\nTest 8: \n";
+//                 0123456789012
+    SuffixTree t8("abakanabakan$");
+    t8.Search("e");//not found
+    t8.Search("bak");// 1 7
+    t8.Search("kan"); // 3 9;
+
+    cout<<"\n\nTest 9: \n";
+//                 0123456789
+    SuffixTree t9("gtgatctcg$");
+    t9.Search("tctc");//4
+    t9.Search("gtg");//0
+    t9.Search("t");// 1 4 6
+
+    cout<<"\n\nTest 10: \n";
+//                  012345678901
+    SuffixTree t10("aacgcgcacg$");
+    t10.Search("cg");// 8 4 2
+    t10.Search("acg");// 7  1
+    t10.Search("t"); // not found.
+
+
 }
