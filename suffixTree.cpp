@@ -153,28 +153,29 @@ private:
 
         current->id = index;
     }
+LinkedList<int> searchPattern(TreeNode* node, const char* pattern) {
+    LinkedList<int> results;
+    TreeNode* current = node;
+    const char *ptr = pattern;
 
-    LinkedList<int> searchPattern(TreeNode* node, const char* pattern) {
-        LinkedList<int> results;
-        
-        TreeNode* current = node;
-   
-        for (const char *ptr = pattern; *ptr != '\0'; ++ptr) {
-            char c = *ptr;
-        // Rest of your loop logic here
-            auto it = findChild(current, c);
+    dfs(current, ptr, results);
 
-         if (it == current->children.end()) {
-        return results;
-                 }
+    return results;
+}
 
-                current = *it;
-            }
-
-        traverseSubtree(current, results);
-
-        return results;
+void dfs(TreeNode* node, const char* pattern, LinkedList<int>& results) {
+    if (*pattern == '\0') { // end of pattern
+        traverseSubtree(node, results); // collect all occurrences
+        return;
     }
+
+    for (auto child : node->children) {
+        if (str[child->st] == *pattern) {
+            dfs(child, pattern + 1, results); // go to next character
+        }
+    }
+}
+
 
     void traverseSubtree(TreeNode* node, LinkedList<int>& results) {
         if (node->id != -1) {
@@ -196,6 +197,7 @@ private:
         return node->children.end();
     }
 };
+
 
 int main() {
        cout<<"Test 1 \n";
