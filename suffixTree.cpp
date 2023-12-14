@@ -107,7 +107,7 @@ public:
 
     TreeNode(int st, int id) : st(st), id(id) {}
 };
-
+int count=0;
 class SuffixTree {
 public:
     SuffixTree(const char* str) : str(str) {
@@ -137,21 +137,49 @@ private:
 
     void insertSuffix(TreeNode* node, int index) {
         TreeNode* current = node;
-         int len = strlen(str);
-        for (int i = index; i <len; ++i) {
-            char c = str[i];
-            auto it = findChild(current, c);
+        int len = strlen(str);
+        char c = str[index];
+        auto it = findChild(current, c);
 
-            if (it == current->children.end()) {
-                TreeNode* newNode = new TreeNode(i, -1);
-                current->children.push_back(newNode);
-                current = newNode;
-            } else {
-                current = *it;
+        if (it == current->children.end()) {
+            TreeNode* newNode = new TreeNode(index, index,c);
+            count++;
+            current->children.push_back(newNode);
+        } else {
+            int firstOccur= index + 1;
+            while (str[index]!=str[firstOccur] && firstOccur<len){
+
+                firstOccur++;
+
             }
+            current = *it;
+            int v1=index,v2=firstOccur;
+            while(str[v1]==str[v2]){
+                v1++;
+                v2++;
+            }
+            auto it2 = findChild(current, str[v2]);
+            if(it2==current->children.end()) {
+                TreeNode *newNode = new TreeNode(v2, current->id, str[v2]);
+                count++;
+                current->children.push_back(newNode);
+            }
+            if( str[v1] == str[current->startingIndex]){
+                TreeNode* newNode = new TreeNode(firstOccur, index,str[firstOccur]);
+                count++;
+                current->children.push_back(newNode);
+                current->id=-1;
+            }else {
+                current->id = -1;
+                int diff=v1-(index+1);
+                int Newindex=v1-diff;
+                insertSuffix(current, Newindex);
+            }
+
         }
 
-        current->id = index;
+
+//        current->id = index;
     }
 LinkedList<int> searchPattern(TreeNode* node, const char* pattern) {
     LinkedList<int> results;
